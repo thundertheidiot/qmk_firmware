@@ -13,27 +13,31 @@
   * You should have received a copy of the GNU General Public License
   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-  #pragma once
+#pragma once
 
-//#define RP2040_FLASH_AT25SF128A
-#define RP2040_FLASH_GD25Q64CS
+#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+#define CAPS_WORD_INVERT_ON_SHIFT
+
+/* #define SPLIT_LED_STATE_ENABLE */
+
+/* #undef TAPPING_TERM */
+#define TAPPING_TERM 175
+#define TAPPING_TERM_PER_KEY
+
+#undef TAPPING_TOGGLE
+#define TAPPING_TOGGLE 2
+
+/* #define RP2040_FLASH_AT25SF128A */
+/* #define RP2040_FLASH_GD25Q64CS */
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET_LED D5
 
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET_TIMEOUT 200U
 
-//#define USE_MATRIX_I2C
-
-/* Select hand configuration */
-
-///https://thomasbaart.nl/2018/12/01/reducing-firmware-size-in-qmk/
-
 
 #define MASTER_LEFT
 // #define MASTER_RIGHT
 /* #define EE_HANDS */
-
-#define CUSTOM_FONT
 
 #define CUSTOM_LAYER_READ //if you remove this it causes issues - needs better guarding
 
@@ -41,6 +45,9 @@
 /* #define TAPPING_FORCE_HOLD */
 #define ENCODER_DIRECTION_FLIP
 
+
+
+// RGB
 
 #define RGBLIGHT_SLEEP
 //
