@@ -45,6 +45,8 @@ enum custom_keycodes {
 #define CU_L LALT_T(KC_L)
 #define CU_SCLN LGUI_T(KC_SCLN)
 
+#define CU_SPC LT(_NUMPAD, KC_SPC)
+
 #ifdef TAPPING_TERM_PER_KEY
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -57,6 +59,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   case CU_L:
   case CU_SCLN:
     return 175;
+  case CU_SPC:
+    return 150;
   default:
     return TAPPING_TERM;
   }
@@ -116,8 +120,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_LCTL,  KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
   CU_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
   LGUI_GESC,CU_A,   CU_S,    CU_D,    CU_F,    KC_G,                     KC_H,    CU_J,    CU_K,    CU_L,    CU_SCLN, KC_QUOT,
-  SC_LSPO,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, LGUI_GESC,  KC_MPLY,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SC_RSPC,
-                       KC_BSPC, KC_LALT, MO(_NUMPAD), TL_LOWR, KC_SPC, LCTL_T(KC_ENT), TL_UPPR, TT(_NORMAL), KC_RCTL, TD_NORMAL
+  SC_LSPO,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, TD_NORMAL,  KC_MPLY,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SC_RSPC,
+                       KC_BSPC, KC_LALT, MO(_NUMPAD), TL_LOWR, CU_SPC, LCTL_T(KC_ENT), TL_UPPR, TT(_NORMAL), KC_RCTL, TD_NORMAL
         ),
 
     [_NORMAL] = LAYOUT(
