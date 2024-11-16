@@ -22,7 +22,7 @@
 
 #include QMK_KEYBOARD_H
 
-enum sofle_layers { _DEFAULTS = 0, _QWERTY = 0, _NORMAL, _GAME, _NUMPAD, _LOWER, _RAISE, _ADJUST};
+enum sofle_layers { _DEFAULTS = 0, _QWERTY = 0, _NORMAL, _GAME, _NUMPAD, _NAVIGATION, _LOWER, _RAISE, _ADJUST, _EMPTY};
 
 enum custom_keycodes {
     KC_D_MUTE = SAFE_RANGE,
@@ -46,6 +46,7 @@ enum custom_keycodes {
 #define CU_SCLN LGUI_T(KC_SCLN)
 
 #define CU_SPC LT(_NUMPAD, KC_SPC)
+#define CU_ENT LT(_NAVIGATION, KC_ENT)
 
 #ifdef TAPPING_TERM_PER_KEY
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
@@ -121,7 +122,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   CU_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
   LGUI_GESC,CU_A,   CU_S,    CU_D,    CU_F,    KC_G,                     KC_H,    CU_J,    CU_K,    CU_L,    CU_SCLN, KC_QUOT,
   SC_LSPO,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, TD_NORMAL,  KC_MPLY,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SC_RSPC,
-                       KC_BSPC, KC_LALT, MO(_NUMPAD), TL_LOWR, CU_SPC, LCTL_T(KC_ENT), TL_UPPR, TT(_NORMAL), KC_RCTL, TD_NORMAL
+                       KC_BSPC, KC_LALT, KC_LGUI, TL_LOWR, CU_SPC, CU_ENT, TL_UPPR, TT(_NORMAL), KC_RCTL, TD_NORMAL
         ),
 
     [_NORMAL] = LAYOUT(
@@ -146,6 +147,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, XXXXXXX, KC_MINS, KC_4, KC_5, KC_6, KC_EQL, KC_PIPE,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, _______, KC_PLUS, KC_1, KC_2, KC_3, KC_SLSH, _______,
                        _______, OSM(MOD_MEH), _______, _______, _______, _______, _______, KC_0, KC_PDOT, _______
+        ),
+
+    [_NAVIGATION] = LAYOUT(
+  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+  _______, _______, _______, KC_WH_U, _______, _______,                   _______, _______, _______, _______, _______, _______,
+  _______, _______, KC_WH_L, KC_WH_D, KC_WH_R, _______,                   KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______, _______,
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
         ),
 
     [_LOWER] = LAYOUT(
@@ -322,8 +331,6 @@ bool shutdown_user(bool jump_to_bootloader) {
 #endif
 
 // TAPDANCE
-td_state_t cur_dance(tap_dance_state_t *state);
-
 static td_tap_t td_normal_state = {
     .is_press_action = true,
     .state           = TD_NONE
@@ -333,13 +340,16 @@ void td_normal_finished(tap_dance_state_t *state, void *user_data) {
   td_normal_state.state = cur_dance(state);
   switch (td_normal_state.state) {
   case TD_SINGLE_TAP:
-    tap_code16(OSL(_NORMAL));
+    tap_code(KC_A);
     break;
   case TD_SINGLE_HOLD:
-    register_code16(MO(_NORMAL));
+    register_code16(KC_B);
     break;
   case TD_DOUBLE_TAP:
-    tap_code16(TG(_NORMAL));
+    tap_code16(KC_C);
+    break;
+  case TD_DOUBLE_HOLD:
+    tap_code16(KC_D);
     break;
   default: break;
   }
@@ -355,6 +365,8 @@ void td_normal_reset(tap_dance_state_t *state, void *user_data) {
 }
 
 // KEYCODES
+
+/* static uint32_t key_timer; */
 
 static uint8_t custom_key_data = 0;
 #define MODESC (1 << 0)
