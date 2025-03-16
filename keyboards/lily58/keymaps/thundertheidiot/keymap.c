@@ -4,7 +4,6 @@
 enum layer_number { _QWERTY = 0, _NORMAL, _GAME, _NUMPAD, _NAV, _LOWER, _RAISE, _ADJUST, _EMPTY };
 
 enum custom_keycodes {
-    KC_D_MUTE = SAFE_RANGE,
     KC_MODESC,
     INTERNAL_LGUI_GESC,
 };
@@ -193,15 +192,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
-
-        case KC_D_MUTE:
-            if (record->event.pressed) {
-                register_mods(mod_config(MOD_MEH));
-                register_code(KC_UP);
-            } else {
-                unregister_mods(mod_config(MOD_MEH));
-                unregister_code(KC_UP);
-            }
     }
     return true;
 }
