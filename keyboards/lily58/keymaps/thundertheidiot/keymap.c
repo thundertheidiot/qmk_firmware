@@ -4,7 +4,7 @@
 enum layer_number { _QWERTY = 0, _NORMAL, _GAME, _NUMPAD, _NAV, _LOWER, _RAISE, _ADJUST, _EMPTY };
 
 enum custom_keycodes {
-    KC_MODESC,
+    KC_MODESC = SAFE_RANGE,
     INTERNAL_LGUI_GESC,
 };
 
