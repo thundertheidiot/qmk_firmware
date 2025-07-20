@@ -1,4 +1,5 @@
 #include "tapdance.h"
+#include "print.h"
 #include QMK_KEYBOARD_H
 
 enum layer_number { _QWERTY = 0, _USFI, _SYMBOL, _GAME, _NUMPAD, _LOWER, _RAISE, _ADJUST, _EMPTY };
@@ -6,7 +7,23 @@ enum layer_number { _QWERTY = 0, _USFI, _SYMBOL, _GAME, _NUMPAD, _LOWER, _RAISE,
 enum custom_keycodes {
     KC_MODESC = SAFE_RANGE,
     INTERNAL_LGUI_GESC,
+    // Fake US Layout
     FI_2,
+    FI_4,
+    FI_6,
+    FI_7,
+    FI_8,
+    FI_9,
+    FI_0,
+    FI_COMM,
+    FI_DOT,
+    FI_SLSH,
+    FI_SCLN,
+    FI_QUOT,
+
+    FI_LBRC,
+    FI_RBRC,
+
 };
 
 // wrap this to get record->tap.count
@@ -84,7 +101,7 @@ void keyboard_post_init_user(void) {
     set_tri_layer_layers(_LOWER, _RAISE, _EMPTY);
 #ifdef CONSOLE_ENABLE
     debug_enable = true;
-    debug_matrix = true;
+    debug_matrix = false;
 #endif
 }
 
@@ -106,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		     ),
 
     [_USFI] = LAYOUT(
-		       _______, FI_2,    _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+		       _______, _______, FI_2,    _______, FI_4,    _______,                   FI_6,    FI_7,    FI_8,    FI_9,    FI_0,    _______,
 		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
 		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
 		       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
@@ -140,7 +157,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_LOWER] = LAYOUT(
 		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, KC_MINS, KC_EQL,
 		       KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-		       QK_BOOT, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+		       QK_BOOT, _______, _______, _______, _______, _______,                   KC_LEFT, KC_DOWN, KC_UP,  KC_RIGHT, _______, _______,
 		       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
 		                                  _______, _______, _______, _______, _______, _______, TO(_QWERTY), _______
 		     ),
@@ -283,6 +300,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+            break;
+
+        // Fake US Layout
         case FI_2:
             if (record->event.pressed) {
                 if (get_mods() & MOD_MASK_SHIFT) {
@@ -297,6 +317,74 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     register_mods(get_mods() | MOD_MASK_SHIFT);
                 } else {
                     tap_code(KC_2);
+                }
+            }
+            return false;
+            break;
+        case FI_4:
+            if (record->event.pressed) {
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    unregister_mods(MOD_MASK_SHIFT);
+
+                    register_code(KC_RALT);
+                    register_code(KC_4);
+
+                    unregister_code(KC_4);
+                    unregister_code(KC_RALT);
+
+                    register_mods(get_mods() | MOD_MASK_SHIFT);
+                } else {
+                    tap_code(KC_4);
+                }
+            }
+            return false;
+            break;
+        case FI_6:
+            if (record->event.pressed) {
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    tap_code(KC_RBRC);
+                } else {
+                    tap_code(KC_6);
+                }
+            }
+            return false;
+            break;
+        case FI_7:
+            if (record->event.pressed) {
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    tap_code(KC_6);
+                } else {
+                    tap_code(KC_7);
+                }
+            }
+            return false;
+            break;
+        case FI_8:
+            if (record->event.pressed) {
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    tap_code(KC_BSLS);
+                } else {
+                    tap_code(KC_8);
+                }
+            }
+            return false;
+            break;
+        case FI_9:
+            if (record->event.pressed) {
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    tap_code(KC_8);
+                } else {
+                    tap_code(KC_9);
+                }
+            }
+            return false;
+            break;
+        case FI_0:
+            if (record->event.pressed) {
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    tap_code(KC_9);
+                } else {
+                    tap_code(KC_0);
                 }
             }
             return false;
