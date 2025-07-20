@@ -2,11 +2,12 @@
 #include "print.h"
 #include QMK_KEYBOARD_H
 
-enum layer_number { _QWERTY = 0, _USFI, _SYMBOL, _GAME, _NUMPAD, _LOWER, _RAISE, _ADJUST, _EMPTY };
+enum layer_number { _QWERTY = 0, _COLEMAKDH, _USFI, _SYMBOL, _GAME, _NUMPAD, _LOWER, _RAISE, _ADJUST, _EMPTY };
 
 enum custom_keycodes {
     KC_MODESC = SAFE_RANGE,
     INTERNAL_LGUI_GESC,
+
     // Fake US Layout
     FI_2,
     FI_4,
@@ -23,7 +24,6 @@ enum custom_keycodes {
 
     FI_LBRC,
     FI_RBRC,
-
 };
 
 // wrap this to get record->tap.count
@@ -42,6 +42,9 @@ enum custom_keycodes {
 
 #define CU_Z LT(_SYMBOL, KC_Z)
 #define CU_SLSH LT(_SYMBOL, KC_SLSH)
+
+#define CU_LOWR LT(_LOWER, KC_ESC)
+#define CU_RAISE LT(_RAISE, KC_BSPC)
 
 #define CU_SPC LT(_NUMPAD, KC_SPC)
 /* #define CU_ENT LT(_NAV, KC_ENT) */
@@ -98,7 +101,7 @@ enum {
 tap_dance_action_t tap_dance_actions[] = {};
 
 void keyboard_post_init_user(void) {
-    set_tri_layer_layers(_LOWER, _RAISE, _EMPTY);
+    set_tri_layer_layers(_LOWER, _RAISE, _ADJUST);
 #ifdef CONSOLE_ENABLE
     debug_enable = true;
     debug_matrix = false;
@@ -106,7 +109,7 @@ void keyboard_post_init_user(void) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, _LOWER, _RAISE, _EMPTY);
+    return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
 
 // KEYMAPS
@@ -119,7 +122,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		       CU_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
 		       LGUI_GESC,CU_A,   CU_S,    CU_D,    CU_F,    KC_G,                      KC_H,    CU_J,    CU_K,    CU_L,    CU_SCLN, KC_QUOT,
 		       KC_LSFT, CU_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  CU_SLSH, KC_RSFT,
-		                                  KC_LALT, KC_LGUI, TL_LOWR, CU_SPC,  CU_ENT,  TL_UPPR, KC_NO,   KC_RCTL
+		                                  KC_LALT, KC_LGUI, CU_LOWR, CU_SPC,  CU_ENT,  CU_RAISE,KC_NO,   KC_RCTL
 		     ),
 
     [_USFI] = LAYOUT(
@@ -141,7 +144,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_GAME] = LAYOUT(
 		       KC_ESC, _______,  _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
 		       KC_3,    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,                      _______, _______, KC_UP,   _______, _______, _______,
-		       KC_LSFT, KC_2,    CU_A,    CU_S,    CU_D,    KC_F,                      _______, KC_LEFT, KC_DOWN, KC_RIGHT,_______, _______,
+		       KC_LSFT, KC_2,    KC_A,    KC_S,    KC_D,    KC_F,                      _______, KC_LEFT, KC_DOWN, KC_RIGHT,_______, _______,
 		       KC_LCTL, KC_1,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_G,    _______, _______, _______, _______, _______, _______, _______,
 		                                  KC_LALT, KC_LGUI, KC_B,    KC_SPC,  KC_ENT,  TL_UPPR, TO(_QWERTY), _______
 		     ),
@@ -164,7 +167,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_RAISE] = LAYOUT(
 		      KC_HOME,  KC_F13,  KC_F14,  KC_F15,  KC_F16,  KC_F17,                    KC_F18,  KC_F19,  KC_F20,  KC_F21,  KC_VOLD, KC_VOLU,
-		      _______, _______, _______, _______, _______, _______,                    KC_PGUP, KC_PGDN, _______, _______, KC_MPLY, _______,
+		      _______, KC_TAB,  _______, _______, _______, _______,                    KC_PGUP, KC_PGDN, _______, _______, KC_MPLY, _______,
 		      _______, _______, KC_PSCR, KC_DEL, TG(_USFI), TO(_GAME),                 KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,_______, _______,
 		      _______, _______, _______, _______, _______, _______, KC_MPRV, KC_MNXT,  KC_PLUS, KC_MINS, KC_END, KC_LBRC, KC_RBRC,  KC_DEL,
 		                                 _______, _______, _______, _______, _______, _______, TO(_QWERTY), _______
@@ -256,7 +259,7 @@ bool oled_task_user(void) {
 
 void oled_render_boot(bool bootloader) {
     oled_clear();
-    oled_write_P(PSTR("BOOT"), false);
+    oled_write_P(PSTR("Boot-\nloader"), false);
     oled_render_dirty(true);
 }
 
