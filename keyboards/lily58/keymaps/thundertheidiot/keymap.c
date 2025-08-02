@@ -64,17 +64,6 @@ enum custom_keycodes {
 #ifdef TAPPING_TERM_PER_KEY
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case CU_A:
-        case CU_S:
-        case CU_D:
-        case CU_F:
-        case CU_J:
-        case CU_K:
-        case CU_L:
-        case CU_SCLN:
-            return 175;
-        case CU_SPC:
-            return 150;
         default:
             return TAPPING_TERM;
     }
