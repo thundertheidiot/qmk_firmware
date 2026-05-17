@@ -1,5 +1,4 @@
-
-#include "tapdance.h"
+/* #include "tapdance.h" */
 #include "print.h"
 #include QMK_KEYBOARD_H
 
@@ -8,23 +7,7 @@ enum layer_number { _QWERTY = 0, _COLEMAKDH, _USFI, _SYMBOL, _GAME, _NUMPAD, _LO
 enum custom_keycodes {
     KC_MODESC = SAFE_RANGE,
     INTERNAL_LGUI_GESC,
-
-    // Fake US Layout
-    FI_2,
-    FI_4,
-    FI_6,
-    FI_7,
-    FI_8,
-    FI_9,
-    FI_0,
-    FI_COMM,
-    FI_DOT,
-    FI_SLSH,
-    FI_SCLN,
-    FI_QUOT,
-
-    FI_LBRC,
-    FI_RBRC,
+    FI_DOUBLE_CIRC,
 };
 
 // wrap this to get record->tap.count
@@ -70,6 +53,41 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 }
 #endif
 
+// US EMULATION
+bool usfi_active = false;
+
+#define KO_USFI(trig_mods, trig, repl)           \
+    {                                            \
+        .trigger_mods      = (trig_mods),        \
+        .trigger           = (trig),             \
+        .replacement       = (repl),             \
+        .layers            = ~0,                 \
+        .negative_mod_mask = 0,                  \
+        .suppressed_mods   = (trig_mods),        \
+        .options           = ko_options_default, \
+        .custom_action     = NULL,               \
+        .context           = NULL,               \
+        .enabled           = &usfi_active,       \
+    }
+
+const key_override_t fi_2     = KO_USFI(MOD_MASK_SHIFT, KC_2, RALT(KC_2));
+const key_override_t fi_4     = KO_USFI(MOD_MASK_SHIFT, KC_4, RALT(KC_4));
+const key_override_t fi_6     = KO_USFI(MOD_MASK_SHIFT, KC_6, FI_DOUBLE_CIRC);
+const key_override_t fi_7     = KO_USFI(MOD_MASK_SHIFT, KC_7, LSFT(KC_6));
+const key_override_t fi_8     = KO_USFI(MOD_MASK_SHIFT, KC_8, LSFT(KC_BSLS));
+const key_override_t fi_9     = KO_USFI(MOD_MASK_SHIFT, KC_9, LSFT(KC_8));
+const key_override_t fi_0     = KO_USFI(MOD_MASK_SHIFT, KC_0, LSFT(KC_9));
+const key_override_t fi_comm  = KO_USFI(MOD_MASK_SHIFT, KC_COMM, KC_NUBS);
+const key_override_t fi_dot   = KO_USFI(MOD_MASK_SHIFT, KC_DOT, LSFT(KC_NUBS));
+const key_override_t fi_slsh0 = KO_USFI(0, CU_SLSH, LSFT(KC_7));
+const key_override_t fi_slsh1 = KO_USFI(MOD_MASK_SHIFT, CU_SLSH, LSFT(KC_MINS));
+const key_override_t fi_scln0 = KO_USFI(0, CU_SCLN, LSFT(KC_COMM));
+const key_override_t fi_scln1 = KO_USFI(MOD_MASK_SHIFT, CU_SCLN, LSFT(KC_DOT));
+const key_override_t fi_quot0 = KO_USFI(0, KC_QUOT, KC_BSLS);
+const key_override_t fi_quot1 = KO_USFI(MOD_MASK_SHIFT, KC_QUOT, LSFT(KC_2));
+
+const key_override_t *key_overrides[] = {&fi_2, &fi_4, &fi_6, &fi_7, &fi_8, &fi_9, &fi_0, &fi_comm, &fi_dot, &fi_slsh0, &fi_slsh1, &fi_scln0, &fi_scln1};
+
 // CAPS WORD
 
 bool caps_word_press_user(uint16_t keycode) {
@@ -94,11 +112,11 @@ bool caps_word_press_user(uint16_t keycode) {
 
 // TAPDANCE ENUM
 
-enum {
-    TD_NORMAL,
-};
+/* enum { */
+/*     TD_NORMAL, */
+/* }; */
 
-tap_dance_action_t tap_dance_actions[] = {};
+/* tap_dance_action_t tap_dance_actions[] = {}; */
 
 void keyboard_post_init_user(void) {
     set_tri_layer_layers(_LOWER, _RAISE, _ADJUST);
@@ -109,6 +127,8 @@ void keyboard_post_init_user(void) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
+    usfi_active = (state & (1UL << _USFI));
+
     return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
 
@@ -144,11 +164,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		     ),
 
     [_USFI] = LAYOUT(
-		       _______, _______, FI_2,    _______, FI_4,    _______,                   FI_6,    FI_7,    FI_8,    FI_9,    FI_0,    _______,
+		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
 		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
 		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
 		       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-		                                  _______, _______, _______, _______, _______, _______, TO(_QWERTY), _______
+		                                  _______, _______, _______, _______, _______, _______, _______, _______
 		     ),
 
     [_SYMBOL] = LAYOUT(
@@ -162,8 +182,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_GAME] = LAYOUT(
 		       KC_ESC, _______,  _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
 		       KC_3,    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,                      _______, _______, KC_UP,   _______, _______, _______,
-		       KC_LSFT, KC_2,    KC_A,    KC_S,    KC_D,    KC_F,                      _______, KC_LEFT, KC_DOWN, KC_RIGHT,_______, _______,
-		       KC_LCTL, KC_1,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_G,    _______, _______, _______, _______, _______, _______, _______,
+		       KC_LSFT, KC_2,    KC_A,    KC_S,    KC_D,    KC_F,                      _______, KC_LEFT, KC_DOWN, KC_RIGHT,KC_SCLN, _______,
+		       KC_LCTL, KC_1,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_G,    _______, _______, _______, _______, _______, KC_SLSH, _______,
 		                                  KC_LALT, KC_LGUI, KC_B,    KC_SPC,  KC_ENT,  TL_UPPR, TO(_QWERTY), _______
 		     ),
 
@@ -171,7 +191,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, KC_MINS, KC_EQL,
 		       _______, _______, _______, _______, _______, _______,                   _______, KC_7,    KC_8,    KC_9,    _______, _______,
 		       _______, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,                   _______, KC_4,    KC_5,    KC_6,    _______, _______,
-		       _______, _______, _______, _______, _______, _______, _______, _______, KC_0,    KC_1,    KC_2,    KC_3,    _______, _______,
+		       _______, KC_SPC,  KC_DOT,  KC_COMM, _______, _______, _______, _______, KC_0,    KC_1,    KC_2,    KC_3,    _______, _______,
 		                                  _______, _______, _______, _______, KC_ENT,  KC_0,    _______, _______
 		     ),
 
@@ -305,6 +325,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     int8_t tap   = record->tap.count;
     int8_t press = record->event.pressed;
 
+    /* #ifdef DEBUG_ENABLE */
+    /* dprintf("layer_state: %b, usfi: %b\n", get_highest_layer(layer_state), _USFI); */
+    /* dprintf("key override: %b\n", key_override_is_enabled()); */
+    /* #endif */
+
     switch (keycode) {
         case LGUI_GESC:
             caps_word_off();
@@ -328,91 +353,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
-
-        // Fake US Layout
-        case FI_2:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    unregister_mods(MOD_MASK_SHIFT);
-
-                    register_code(KC_RALT);
-                    register_code(KC_2);
-
-                    unregister_code(KC_2);
-                    unregister_code(KC_RALT);
-
-                    register_mods(get_mods() | MOD_MASK_SHIFT);
-                } else {
-                    tap_code(KC_2);
-                }
-            }
-            return false;
-            break;
-        case FI_4:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    unregister_mods(MOD_MASK_SHIFT);
-
-                    register_code(KC_RALT);
-                    register_code(KC_4);
-
-                    unregister_code(KC_4);
-                    unregister_code(KC_RALT);
-
-                    register_mods(get_mods() | MOD_MASK_SHIFT);
-                } else {
-                    tap_code(KC_4);
-                }
-            }
-            return false;
-            break;
-        case FI_6:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    tap_code(KC_RBRC);
-                } else {
-                    tap_code(KC_6);
-                }
-            }
-            return false;
-            break;
-        case FI_7:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    tap_code(KC_6);
-                } else {
-                    tap_code(KC_7);
-                }
-            }
-            return false;
-            break;
-        case FI_8:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    tap_code(KC_BSLS);
-                } else {
-                    tap_code(KC_8);
-                }
-            }
-            return false;
-            break;
-        case FI_9:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    tap_code(KC_8);
-                } else {
-                    tap_code(KC_9);
-                }
-            }
-            return false;
-            break;
-        case FI_0:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    tap_code(KC_9);
-                } else {
-                    tap_code(KC_0);
-                }
+        case FI_DOUBLE_CIRC:
+            if (tap && press) {
+                register_mods(MOD_MASK_SHIFT);
+                tap_code(KC_RBRC);
+                tap_code(KC_RBRC);
+                unregister_mods(MOD_MASK_SHIFT);
             }
             return false;
             break;

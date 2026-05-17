@@ -8,11 +8,10 @@ LTO_ENABLE = yes
 OLED_ENABLE = yes
 NKRO_ENABLE = yes
 TRI_LAYER_ENABLE = yes
-TAP_DANCE_ENABLE = yes
+TAP_DANCE_ENABLE = no
 CAPS_WORD_ENABLE = yes
 # OLED_DRIVER = SSD1306
 
-SRC += 	./led.c \
-	./tapdance.c
+SRC += 	./led.c
 
-CONVERT_TO=promicro_rp2040
+CONVERT_TO=rp2040_ce
