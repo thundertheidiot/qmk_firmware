@@ -24,6 +24,8 @@
 #define TAPPING_TERM 150
 #define PERMISSIVE_HOLD
 
+#define CHORDAL_HOLD
+
 #undef TAPPING_TOGGLE
 #define TAPPING_TOGGLE 2
 

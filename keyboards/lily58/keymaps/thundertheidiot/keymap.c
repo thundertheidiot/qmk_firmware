@@ -213,8 +213,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_ADJUST] = LAYOUT(
 		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-		       _______, DF(_QWERTY),DF(_COLEMAKDH),_______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-		       _______, _______, _______, KC_VOLD, KC_VOLU, _______,                   _______, _______, _______, _______, _______, _______,
+		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+		       _______, DF(_QWERTY), DF(_COLEMAKDH), KC_VOLD, KC_VOLU, _______,        _______, _______, _______, _______, _______, _______,
 		       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
 		                                  _______, _______, _______, _______, _______, _______, _______, _______
 		     ),
@@ -247,41 +247,48 @@ static void print_status_narrow(void) {
         oled_clear();
     }
 
-    if (is_caps_word_on()) {
-        oled_write_ln_P(PSTR("MEOW"), false);
+    if (layer_state & (1UL << _USFI)) {
+        oled_write_P(PSTR("FI\n"), false);
     } else {
-        oled_write_ln_P(PSTR("meow"), false);
+        oled_write_P(PSTR("\n"), false);
     }
 
-    // Print current layer
-    oled_write_ln_P(PSTR("\n"), false);
-    switch (get_highest_layer(layer_state)) {
+    switch (get_highest_layer(default_layer_state)) {
         case _QWERTY:
-            oled_write_P(PSTR("Base\n\n"), false);
+            oled_write_P(PSTR("qwrt\n"), false);
             break;
+        case _COLEMAKDH:
+            oled_write_P(PSTR("cmdh\n"), false);
+            break;
+    }
+
+    switch (get_highest_layer(layer_state)) {
         case _RAISE:
-            oled_write_P(PSTR("Raise\n\n"), false);
+            oled_write_P(PSTR("raise\n\n"), false);
             break;
         case _LOWER:
-            oled_write_P(PSTR("Lower\n\n"), false);
+            oled_write_P(PSTR("lower\n\n"), false);
             break;
         case _SYMBOL:
-            oled_write_P(PSTR("Smbl\n\n"), false);
+            oled_write_P(PSTR("smbl\n\n"), false);
             break;
         case _ADJUST:
-            oled_write_P(PSTR("Adj\n\n"), false);
+            oled_write_P(PSTR("adj\n\n"), false);
             break;
         case _NUMPAD:
-            oled_write_P(PSTR("Nump\n\n"), false);
+            oled_write_P(PSTR("nump\n\n"), false);
             break;
         case _GAME:
-            oled_write_P(PSTR("Game\n\n"), false);
-            break;
-        case _USFI:
-            oled_write_P(PSTR("UsFi\n\n"), false);
+            oled_write_P(PSTR("game\n\n"), false);
             break;
         default:
-            oled_write_ln_P(PSTR("Undef"), false);
+            oled_write_P(PSTR("base\n\n"), false);
+    }
+
+    if (is_caps_word_on()) {
+        oled_write_P(PSTR("C"), false);
+    } else {
+        oled_write_P(PSTR(" "), false);
     }
 }
 
