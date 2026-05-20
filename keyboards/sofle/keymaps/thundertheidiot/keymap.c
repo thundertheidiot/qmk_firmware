@@ -144,8 +144,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, KC_MINS, KC_EQL,
 		       _______, _______, _______, _______, _______, _______,                   _______, KC_7,    KC_8,    KC_9,    _______, _______,
 		       _______, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______,                   _______, KC_4,    KC_5,    KC_6,    _______, _______,
-		       _______, KC_SPC,  KC_DOT,  KC_COMM, _______, _______, _______, _______, KC_0,    KC_1,    KC_2,    KC_3,    _______, _______,
-			                     _______, _______, _______, _______, _______, KC_ENT,  _______, KC_0,    _______, _______
+		       _______, KC_SPC,  KC_DOT,  KC_COMM, _______, _______, _______, _______, _______, KC_1,    KC_2,    KC_3,    _______, _______,
+			                     _______, _______, _______, _______, _______, KC_ENT,  KC_0,    KC_0,    _______, _______
 		     ),
 
     [_LOWER] = LAYOUT(
@@ -216,10 +216,10 @@ static void print_status_narrow(void) {
 
     switch (get_highest_layer(layer_state)) {
         case _RAISE:
-            oled_write_P(PSTR("raise\n\n"), false);
+            oled_write_P(PSTR("raise\n"), false);
             break;
         case _LOWER:
-            oled_write_P(PSTR("lower\n\n"), false);
+            oled_write_P(PSTR("lower\n"), false);
             break;
         case _SYMBOL:
             oled_write_P(PSTR("smbl\n\n"), false);
@@ -238,9 +238,9 @@ static void print_status_narrow(void) {
     }
 
     if (is_caps_word_on()) {
-        oled_write_P(PSTR("C"), false);
+        oled_write_P(PSTR("C\n"), false);
     } else {
-        oled_write_P(PSTR(" "), false);
+        oled_write_P(PSTR(" \n"), false);
     }
 }
 
