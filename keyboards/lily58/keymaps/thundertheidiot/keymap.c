@@ -2,7 +2,7 @@
 #include "print.h"
 #include QMK_KEYBOARD_H
 
-enum layer_number { _QWERTY = 0, _COLEMAKDH, _USFI, _SYMBOL, _GAME, _NUMPAD, _LOWER, _RAISE, _ADJUST, _EMPTY };
+enum layer_number { _COLEMAKDH = 0, _QWERTY, _USFI, _SYMBOL, _GAME, _NUMPAD, _LOWER, _RAISE, _ADJUST, _EMPTY };
 
 enum custom_keycodes {
     KC_MODESC = SAFE_RANGE,
@@ -30,7 +30,7 @@ enum custom_keycodes {
 #define CL_T LCTL_T(KC_T)
 
 #define CL_N LCTL_T(KC_N)
-#define CL_E LSFT_T(KC_E)
+#define CL_E RSFT_T(KC_E)
 #define CL_I LALT_T(KC_I)
 #define CL_O LGUI_T(KC_O)
 
@@ -184,7 +184,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		       KC_3,    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,                      _______, _______, KC_UP,   _______, _______, _______,
 		       KC_LSFT, KC_2,    KC_A,    KC_S,    KC_D,    KC_F,                      _______, KC_LEFT, KC_DOWN, KC_RIGHT,KC_SCLN, _______,
 		       KC_LCTL, KC_1,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_G,    _______, _______, _______, _______, _______, KC_SLSH, _______,
-		                                  KC_LALT, KC_LGUI, KC_B,    KC_SPC,  KC_ENT,  TL_UPPR, TO(_QWERTY), _______
+		                                  KC_LALT, KC_LGUI, KC_B,    KC_SPC,  KC_ENT,  TL_UPPR, TG(_GAME), _______
 		     ),
 
     [_NUMPAD] = LAYOUT(
@@ -200,15 +200,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		       KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
 		       QK_BOOT, _______, _______, _______, _______, _______,                   KC_LEFT, KC_DOWN, KC_UP,  KC_RIGHT, _______, _______,
 		       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-		                                  _______, _______, _______, _______, _______, _______, TO(_QWERTY), _______
+		                                  _______, _______, _______, _______, _______, _______, TG(_GAME), _______
 		     ),
 
     [_RAISE] = LAYOUT(
 		      KC_HOME,  KC_F13,  KC_F14,  KC_F15,  KC_F16,  KC_F17,                    KC_F18,  KC_F19,  KC_F20,  KC_F21,  KC_VOLD, KC_VOLU,
 		      _______, KC_TAB,  _______, _______, _______, _______,                    KC_PGUP, KC_PGDN, _______, _______, KC_MPLY, _______,
-		      _______, _______, KC_PSCR, KC_DEL, TG(_USFI), TO(_GAME),                 KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,_______, _______,
+		      _______, _______, KC_PSCR, KC_DEL, TG(_USFI), TG(_GAME),                 KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,_______, _______,
 		      _______, _______, _______, _______, _______, _______, KC_MPRV, KC_MNXT,  KC_PLUS, KC_MINS, KC_END,  _______, _______, KC_DEL,
-		                                 _______, _______, _______, _______, _______, _______, TO(_QWERTY), _______
+		                                 _______, _______, _______, _______, _______, _______, TG(_GAME), _______
 		      ),
 
     [_ADJUST] = LAYOUT(
