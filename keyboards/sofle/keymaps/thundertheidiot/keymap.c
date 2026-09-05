@@ -207,10 +207,7 @@ static void print_status_narrow(void) {
 
     switch (get_highest_layer(default_layer_state)) {
         case _QWERTY:
-            oled_write_P(PSTR("qwrt\n"), false);
-            break;
-        case _COLEMAKDH:
-            oled_write_P(PSTR("cmdh\n"), false);
+            oled_write_P(PSTR("q\n"), false);
             break;
     }
 
@@ -234,7 +231,6 @@ static void print_status_narrow(void) {
             oled_write_P(PSTR("game\n\n"), false);
             break;
         default:
-            oled_write_P(PSTR("base\n\n"), false);
     }
 
     if (is_caps_word_on()) {
