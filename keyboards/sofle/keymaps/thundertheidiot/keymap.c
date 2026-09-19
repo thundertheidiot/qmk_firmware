@@ -20,6 +20,7 @@
 #include "print.h"
 
 #include QMK_KEYBOARD_H
+#include "finnshift.h"
 
 enum sofle_layers { _DEFAULTS = 0, _COLEMAKDH = 0, _QWERTY, _GAME, _SYMBOL, _NUMPAD, _NAVIGATION, _LOWER, _RAISE, _ADJUST, _EMPTY };
 
@@ -158,7 +159,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_RAISE] = LAYOUT(
 		      KC_HOME,  KC_F13,  KC_F14,  KC_F15,  KC_F16,  KC_F17,                    KC_F18,  KC_F19,  KC_F20,  KC_F21,  KC_VOLD, KC_VOLU,
-		      _______, KC_TAB,  _______, _______, _______, _______,                    KC_PGUP, KC_PGDN, _______, _______, KC_MPLY, _______,
+		      _______, KC_TAB,  _______, FI_TGGL, _______, _______,                    KC_PGUP, KC_PGDN, _______, _______, KC_MPLY, _______,
 		      _______, _______, KC_PSCR, KC_DEL,  _______, TG(_GAME),                  KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,_______, _______,
 		      _______, _______, _______, _______, _______, _______, KC_MPRV, KC_MNXT,  KC_PLUS, KC_MINS, KC_END,  _______, _______, KC_DEL,
 			                    _______, _______, _______, _______, _______, _______, _______, TG(_GAME), _______, _______
@@ -235,6 +236,12 @@ static void print_status_narrow(void) {
 
     if (is_caps_word_on()) {
         oled_write_P(PSTR("C\n"), false);
+    } else {
+        oled_write_P(PSTR(" \n"), false);
+    }
+
+    if (finnshift_enabled()) {
+        oled_write_P(PSTR("fi\n"), false);
     } else {
         oled_write_P(PSTR(" \n"), false);
     }

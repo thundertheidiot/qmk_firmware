@@ -1,0 +1,11 @@
+{
+    "module_name": "Finnshift",
+    "maintainer": "thundertheidiot",
+    "license": "GPL-2.0-or-later",
+    "keycodes": [
+        {
+            "key": "FI_SHIFT_TOGGLE",
+            "aliases": ["FI_TGGL"]
+        }
+    ]
+}
