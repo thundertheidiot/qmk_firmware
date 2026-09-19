@@ -413,8 +413,9 @@ bool process_record_finnshift(uint16_t keycode, keyrecord_t *record) {
     }
     // Conversely, mods the context suppresses (e.g. shift while an AltGr
     // context is latched) are still physically held; the user's typing intent
-    // includes them.
-    uint8_t intent_mods = union_mods;
+    // includes them. Our own latched additions (the LSHIFT added for '=', the
+    // RALT added for '@', ...) do NOT count as user intent.
+    uint8_t intent_mods = user_mods;
     if (held.active) {
         intent_mods |= held.ctx.saved_mods;
     }
