@@ -7,7 +7,7 @@
 ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 
 // What a translated key emits: `code` is registered while the physical key is
-// held, with `mods` applied. Only shift (MOD_LSFT) and AltGr (MOD_RALT) are
+// held, with `mods` applied. Only shift (MOD_BIT_LSHIFT) and AltGr (MOD_BIT_RALT) are
 // ever needed to produce a given glyph on the Finnish layout. Dead keys
 // (`^ ~) can't be held meaningfully; they are emitted as an immediate double
 // tap, which produces the literal glyph.
@@ -82,10 +82,10 @@ static void suppress_conflicts(emission_t em, bool altgr, mod_guard_t *g) {
     uint8_t union_mods = g->cur | g->cur_weak | oneshot;
 
     g->drop = oneshot;
-    if (!(em.mods & MOD_LSFT)) {
+    if (!(em.mods & MOD_BIT_LSHIFT)) {
         g->drop |= union_mods & MOD_MASK_SHIFT;
     }
-    if (altgr || (em.mods & MOD_RALT)) {
+    if (altgr || (em.mods & MOD_BIT_RALT)) {
         g->drop |= union_mods & (MOD_MASK_CTRL | MOD_MASK_ALT);
     }
 
@@ -143,56 +143,56 @@ static tr_result_t translate_punct(uint16_t keycode, uint8_t mods, emission_t *o
     bool sh = mods & MOD_MASK_SHIFT;
     switch (keycode) {
         case KC_GRV:
-            *out = sh ? EMIT_DEAD(MOD_RALT, KC_RBRC) : EMIT_DEAD(MOD_LSFT, KC_EQL);
+            *out = sh ? EMIT_DEAD(MOD_BIT_RALT, KC_RBRC) : EMIT_DEAD(MOD_BIT_LSHIFT, KC_EQL);
             return TR_EMIT; // ` ~ (dead keys)
         case KC_2:
             if (!sh) return TR_PASS;
-            *out = EMIT(MOD_RALT, KC_2);
+            *out = EMIT(MOD_BIT_RALT, KC_2);
             return TR_EMIT; // @
         case KC_4:
             if (!sh) return TR_PASS;
-            *out = EMIT(MOD_RALT, KC_4);
+            *out = EMIT(MOD_BIT_RALT, KC_4);
             return TR_EMIT; // $
         case KC_6:
             if (!sh) return TR_PASS;
-            *out = EMIT_DEAD(MOD_LSFT, KC_RBRC);
+            *out = EMIT_DEAD(MOD_BIT_LSHIFT, KC_RBRC);
             return TR_EMIT; // ^ (dead key)
         case KC_7:
             if (!sh) return TR_PASS;
-            *out = EMIT(MOD_LSFT, KC_6);
+            *out = EMIT(MOD_BIT_LSHIFT, KC_6);
             return TR_EMIT; // &
         case KC_8:
             if (!sh) return TR_PASS;
-            *out = EMIT(MOD_LSFT, KC_NUHS);
+            *out = EMIT(MOD_BIT_LSHIFT, KC_NUHS);
             return TR_EMIT; // *
         case KC_9:
             if (!sh) return TR_PASS;
-            *out = EMIT(MOD_LSFT, KC_8);
+            *out = EMIT(MOD_BIT_LSHIFT, KC_8);
             return TR_EMIT; // (
         case KC_0:
             if (!sh) return TR_PASS;
-            *out = EMIT(MOD_LSFT, KC_9);
+            *out = EMIT(MOD_BIT_LSHIFT, KC_9);
             return TR_EMIT; // )
         case KC_MINS:
-            *out = sh ? EMIT(MOD_LSFT, KC_SLSH) : EMIT(0, KC_SLSH);
+            *out = sh ? EMIT(MOD_BIT_LSHIFT, KC_SLSH) : EMIT(0, KC_SLSH);
             return TR_EMIT; // - _
         case KC_EQL:
-            *out = sh ? EMIT(0, KC_MINS) : EMIT(MOD_LSFT, KC_0);
+            *out = sh ? EMIT(0, KC_MINS) : EMIT(MOD_BIT_LSHIFT, KC_0);
             return TR_EMIT; // = +
         case KC_LBRC:
-            *out = sh ? EMIT(MOD_RALT, KC_7) : EMIT(MOD_RALT, KC_8);
+            *out = sh ? EMIT(MOD_BIT_RALT, KC_7) : EMIT(MOD_BIT_RALT, KC_8);
             return TR_EMIT; // [ {
         case KC_RBRC:
-            *out = sh ? EMIT(MOD_RALT, KC_0) : EMIT(MOD_RALT, KC_9);
+            *out = sh ? EMIT(MOD_BIT_RALT, KC_0) : EMIT(MOD_BIT_RALT, KC_9);
             return TR_EMIT; // ] }
         case KC_BSLS:
-            *out = sh ? EMIT(MOD_RALT, KC_NUBS) : EMIT(MOD_RALT, KC_MINS);
+            *out = sh ? EMIT(MOD_BIT_RALT, KC_NUBS) : EMIT(MOD_BIT_RALT, KC_MINS);
             return TR_EMIT; // \ |
         case KC_SCLN:
-            *out = sh ? EMIT(MOD_LSFT, KC_DOT) : EMIT(MOD_LSFT, KC_COMM);
+            *out = sh ? EMIT(MOD_BIT_LSHIFT, KC_DOT) : EMIT(MOD_BIT_LSHIFT, KC_COMM);
             return TR_EMIT; // ; :
         case KC_QUOT:
-            *out = sh ? EMIT(MOD_LSFT, KC_2) : EMIT(0, KC_NUHS);
+            *out = sh ? EMIT(MOD_BIT_LSHIFT, KC_2) : EMIT(0, KC_NUHS);
             return TR_EMIT; // ' "
         case KC_COMM:
             if (!sh) return TR_PASS;
@@ -200,10 +200,10 @@ static tr_result_t translate_punct(uint16_t keycode, uint8_t mods, emission_t *o
             return TR_EMIT; // <
         case KC_DOT:
             if (!sh) return TR_PASS;
-            *out = EMIT(MOD_LSFT, KC_NUBS);
+            *out = EMIT(MOD_BIT_LSHIFT, KC_NUBS);
             return TR_EMIT; // >
         case KC_SLSH:
-            *out = sh ? EMIT(MOD_LSFT, KC_MINS) : EMIT(MOD_LSFT, KC_7);
+            *out = sh ? EMIT(MOD_BIT_LSHIFT, KC_MINS) : EMIT(MOD_BIT_LSHIFT, KC_7);
             return TR_EMIT; // / ?
     }
     return TR_NONE;
@@ -213,27 +213,27 @@ static tr_result_t translate_punct(uint16_t keycode, uint8_t mods, emission_t *o
 // comes with the emission.
 static tr_result_t translate_direct(uint16_t keycode, emission_t *out) {
     switch (keycode) {
-        case KC_EXLM: *out = EMIT(MOD_LSFT, KC_1); return TR_EMIT;       // !
-        case KC_AT:   *out = EMIT(MOD_RALT, KC_2); return TR_EMIT;       // @
-        case KC_HASH: *out = EMIT(MOD_LSFT, KC_3); return TR_EMIT;       // #
-        case KC_DLR:  *out = EMIT(MOD_RALT, KC_4); return TR_EMIT;       // $
-        case KC_PERC: *out = EMIT(MOD_LSFT, KC_5); return TR_EMIT;       // %
-        case KC_CIRC: *out = EMIT_DEAD(MOD_LSFT, KC_RBRC); return TR_EMIT; // ^ (dead)
-        case KC_AMPR: *out = EMIT(MOD_LSFT, KC_6); return TR_EMIT;       // &
-        case KC_ASTR: *out = EMIT(MOD_LSFT, KC_NUHS); return TR_EMIT;    // *
-        case KC_LPRN: *out = EMIT(MOD_LSFT, KC_8); return TR_EMIT;       // (
-        case KC_RPRN: *out = EMIT(MOD_LSFT, KC_9); return TR_EMIT;       // )
-        case KC_UNDS: *out = EMIT(MOD_LSFT, KC_SLSH); return TR_EMIT;    // _
+        case KC_EXLM: *out = EMIT(MOD_BIT_LSHIFT, KC_1); return TR_EMIT;       // !
+        case KC_AT:   *out = EMIT(MOD_BIT_RALT, KC_2); return TR_EMIT;       // @
+        case KC_HASH: *out = EMIT(MOD_BIT_LSHIFT, KC_3); return TR_EMIT;       // #
+        case KC_DLR:  *out = EMIT(MOD_BIT_RALT, KC_4); return TR_EMIT;       // $
+        case KC_PERC: *out = EMIT(MOD_BIT_LSHIFT, KC_5); return TR_EMIT;       // %
+        case KC_CIRC: *out = EMIT_DEAD(MOD_BIT_LSHIFT, KC_RBRC); return TR_EMIT; // ^ (dead)
+        case KC_AMPR: *out = EMIT(MOD_BIT_LSHIFT, KC_6); return TR_EMIT;       // &
+        case KC_ASTR: *out = EMIT(MOD_BIT_LSHIFT, KC_NUHS); return TR_EMIT;    // *
+        case KC_LPRN: *out = EMIT(MOD_BIT_LSHIFT, KC_8); return TR_EMIT;       // (
+        case KC_RPRN: *out = EMIT(MOD_BIT_LSHIFT, KC_9); return TR_EMIT;       // )
+        case KC_UNDS: *out = EMIT(MOD_BIT_LSHIFT, KC_SLSH); return TR_EMIT;    // _
         case KC_PLUS: *out = EMIT(0, KC_MINS); return TR_EMIT;           // +
-        case KC_LCBR: *out = EMIT(MOD_RALT, KC_7); return TR_EMIT;       // {
-        case KC_RCBR: *out = EMIT(MOD_RALT, KC_0); return TR_EMIT;       // }
-        case KC_PIPE: *out = EMIT(MOD_RALT, KC_NUBS); return TR_EMIT;    // |
-        case KC_TILD: *out = EMIT_DEAD(MOD_RALT, KC_RBRC); return TR_EMIT; // ~ (dead)
-        case KC_COLN: *out = EMIT(MOD_LSFT, KC_DOT); return TR_EMIT;     // :
-        case KC_DQUO: *out = EMIT(MOD_LSFT, KC_2); return TR_EMIT;       // "
-        case KC_QUES: *out = EMIT(MOD_LSFT, KC_MINS); return TR_EMIT;    // ?
+        case KC_LCBR: *out = EMIT(MOD_BIT_RALT, KC_7); return TR_EMIT;       // {
+        case KC_RCBR: *out = EMIT(MOD_BIT_RALT, KC_0); return TR_EMIT;       // }
+        case KC_PIPE: *out = EMIT(MOD_BIT_RALT, KC_NUBS); return TR_EMIT;    // |
+        case KC_TILD: *out = EMIT_DEAD(MOD_BIT_RALT, KC_RBRC); return TR_EMIT; // ~ (dead)
+        case KC_COLN: *out = EMIT(MOD_BIT_LSHIFT, KC_DOT); return TR_EMIT;     // :
+        case KC_DQUO: *out = EMIT(MOD_BIT_LSHIFT, KC_2); return TR_EMIT;       // "
+        case KC_QUES: *out = EMIT(MOD_BIT_LSHIFT, KC_MINS); return TR_EMIT;    // ?
         case KC_LABK: *out = EMIT(0, KC_NUBS); return TR_EMIT;           // <
-        case KC_RABK: *out = EMIT(MOD_LSFT, KC_NUBS); return TR_EMIT;    // >
+        case KC_RABK: *out = EMIT(MOD_BIT_LSHIFT, KC_NUBS); return TR_EMIT;    // >
     }
     return TR_NONE;
 }
@@ -242,10 +242,10 @@ static tr_result_t translate_direct(uint16_t keycode, emission_t *out) {
 static tr_result_t translate_altgr_letter(uint16_t keycode, uint8_t mods, emission_t *out) {
     bool sh = mods & MOD_MASK_SHIFT;
     switch (keycode) {
-        case KC_W: *out = EMIT(sh ? MOD_LSFT : 0, KC_LBRC); return TR_EMIT; // å Å
-        case KC_A: *out = EMIT(sh ? MOD_LSFT : 0, KC_QUOT); return TR_EMIT; // ä Ä
-        case KC_O: *out = EMIT(sh ? MOD_LSFT : 0, KC_SCLN); return TR_EMIT; // ö Ö
-        case KC_E: *out = EMIT(MOD_RALT, KC_5); return TR_EMIT;             // €
+        case KC_W: *out = EMIT(sh ? MOD_BIT_LSHIFT : 0, KC_LBRC); return TR_EMIT; // å Å
+        case KC_A: *out = EMIT(sh ? MOD_BIT_LSHIFT : 0, KC_QUOT); return TR_EMIT; // ä Ä
+        case KC_O: *out = EMIT(sh ? MOD_BIT_LSHIFT : 0, KC_SCLN); return TR_EMIT; // ö Ö
+        case KC_E: *out = EMIT(MOD_BIT_RALT, KC_5); return TR_EMIT;             // €
     }
     return TR_NONE;
 }

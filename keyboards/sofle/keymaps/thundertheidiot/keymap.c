@@ -282,6 +282,7 @@ bool shutdown_user(bool jump_to_bootloader) {
 
 static uint8_t custom_key_data = 0;
 #define MODESC (1 << 0)
+#define GRAVE (1 << 1)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     int8_t tap   = record->tap.count;
@@ -291,21 +292,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case LGUI_GESC:
             caps_word_off();
 
-            int8_t shifted = get_mods() & MOD_MASK_SG;
+            int8_t shifted = get_mods() & MOD_MASK_SHIFT;
+            int8_t guied   = get_mods() & MOD_MASK_GUI;
 
-            if (!shifted && tap && press) {
-                tap_code(KC_ESC);
-            } else if ((shifted && press) || (shifted && tap && press)) {
-                register_code(KC_GRAVE);
-            } else if (!shifted && press) {
-                register_mods(MOD_MASK_GUI);
-                custom_key_data |= MODESC;
+            if (press) {
+                if (guied) {
+                    // super+gesc: raw grave with super held, on every layout
+                    register_code(KC_GRAVE);
+                    custom_key_data |= GRAVE;
+                } else if (shifted) {
+                    // shift+gesc: `~` — finnshift-translated when enabled
+                    finnshift_send_symbol(KC_TILD);
+                } else if (tap) {
+                    tap_code(KC_ESC);
+                } else {
+                    register_mods(MOD_MASK_GUI);
+                    custom_key_data |= MODESC;
+                }
             } else {
                 if (custom_key_data & MODESC) {
                     unregister_mods(MOD_MASK_GUI);
                     custom_key_data &= ~MODESC;
-                } else if (shifted) {
+                } else if (custom_key_data & GRAVE) {
                     unregister_code(KC_GRAVE);
+                    custom_key_data &= ~GRAVE;
                 }
             }
             return false;
