@@ -365,7 +365,7 @@ static tr_result_t translate_altgr_letter(uint16_t keycode, uint8_t mods, emissi
             *out = EMIT(sh ? MOD_BIT_LSHIFT : 0, KC_SCLN);
             return TR_EMIT; // ö Ö
         case KC_E:
-            *out = EMIT(MOD_BIT_RALT, KC_5);
+            *out = EMIT(MOD_BIT_RALT, KC_E);
             return TR_EMIT; // €
     }
     return TR_NONE;
